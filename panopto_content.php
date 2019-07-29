@@ -205,7 +205,7 @@ try {
                                     get_string('course_settings', 'block_panopto') .
                                 '</a>' .
                             "</div>\n";*/
-                        $content->text .= '<hr /><div class="sectionHeader"><b>2017/2018</b></div><div class="listItem">' .
+                        $content->text .= '<hr /><div class="sectionHeader"><b>2018/2019</b></div><div class="listItem">' .
                                                                    get_string('lastyearvideos', 'block_panopto').'<p><strong>'.
                                                                    get_string('contactus', 'block_panopto').': </strong>'.
                                                                    '<a href="mailto:apoio.elearning@uporto.pt?subject=Migrar%20videos:%20'.$COURSE->shortname.'">apoio.elearning@uporto.pt</a></p>';
