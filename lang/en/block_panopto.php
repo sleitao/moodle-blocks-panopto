@@ -217,4 +217,7 @@ $string['upgrade_panopto_required_version'] = 'A Panopto server you are using do
 $string['upgrade_provision_access_error'] = 'UPGRADE BLOCKED: The user {$a} does not have access to a provisioned Panopto course folder. Upgrading user must have at least viewer access to all Panopto course folders. It is highly reccommended that the upgrading user is an Administrator on Panopto.';
 $string['users_have_been_synced'] = 'The below users have been synced and should be ready to use Panopto.';
 $string['watch_live'] = 'Watch Live';
+$string['lastyearvideos'] = 'Wish to use last year\'s videos?';
+$string['contactus'] = 'Contact us';
+$string['enter'] = 'Enter';
 /* End of file block_panopto.php */
