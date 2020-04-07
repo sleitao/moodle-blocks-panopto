@@ -211,7 +211,7 @@ try {
                                                                    '<a href="mailto:apoio.elearning@uporto.pt?subject=Migrar%20videos:%20'.$COURSE->shortname.'">apoio.elearning@uporto.pt</a></p>';
                     }
                     // sleitao - 2016-04-26 - Link de acesso a home do Panopto independentemente do perfil
-                       $content->text .= '<a href="https://'.$panoptodata->servername.'/Panopto/Pages/Sessions/List.aspx" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
+                        $content->text .= '<a href="'.$courseinfo->ListUrl.'" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
                                           get_string('enter','block_panopto').' Panopto</a></p></div>';
                     
                     // A the users who can provision are the Moodle admin, and enrolled users given a publisher or creator role.
