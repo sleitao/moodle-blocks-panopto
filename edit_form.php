@@ -67,7 +67,7 @@ class block_panopto_edit_form extends block_edit_form {
 
             // Esconde o setting para não admins - sleitao 2020.06.03
             $context = context_course::instance($COURSE->id);
-            if (has_capability('block/panopto:provision_multiple', $context) {
+            if (has_capability('block/panopto:provision_multiple', $context)) {
                 $mform->addElement('select', 'config_course', get_string('existing_course', 'block_panopto'),
                     $courselist['courses']);
                 $mform->setDefault('config_course', $courselist['selected']);
