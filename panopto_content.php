@@ -201,9 +201,6 @@ try {
 						                   get_string('lastyearvideos', 'block_panopto').'<p><strong>'.
 						                   get_string('contactus', 'block_panopto').': </strong>'.
 						                   '<a href="mailto:apoio.elearning@uporto.pt?subject=Migrar%20videos:%20'.$COURSE->shortname.'">apoio.elearning@uporto.pt</a></p>';
-						// sleitao - 2016-04-26 - Link de acesso direto para o folder do curso
-						$content->text .= '<a href="'.$courseinfo->ListUrl.'" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
-						                  get_string('enter','block_panopto').' Panopto</a></p></div>';
                         /*$content->text .= "<div class='sectionHeader'><b>" . get_string('links', 'block_panopto') .
                             '</b></div>' .
                             "<div class='listItem'>" .
@@ -212,6 +209,9 @@ try {
                                 '</a>' .
                             "</div>\n";*/
                     }
+			// sleitao - 2016-04-26 - Link de acesso direto para o folder do curso
+			$content->text .= '<a href="'.$courseinfo->ListUrl.'" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
+				get_string('enter','block_panopto').' Panopto</a></p></div>';
 
                     // A the users who can provision are the Moodle admin, and enrolled users given a publisher or creator role.
                     // This makes it so can_user_provision will allow only creators/publishers/admins to see these links.
