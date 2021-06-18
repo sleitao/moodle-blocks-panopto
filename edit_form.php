@@ -61,13 +61,16 @@ class block_panopto_edit_form extends block_edit_form {
             $unprovisionurl = "$CFG->wwwroot/blocks/panopto/unprovision_course_internal.php?id=" . $COURSE->id;
             $unprovisionfrommoodle = get_string('unprovision_from_moodle', 'block_panopto');
             $or = get_string('or', 'block_panopto');
-            $mform->addElement('html', "<a href='$unprovisionurl'>$unprovisionfrommoodle</a><br><br>-- $or --<br><br><a href='$provisionurl'>$addtopanopto</a><br><br>-- $or --<br><br>");
+            $mform->addElement('html', "<a href='$unprovisionurl'>$unprovisionfrommoodle</a><br><br>-- $or --<br><br><a href='$provisionurl'>$addtopanopto</a><br><!--<br>-- $or --<br>--><br>");
 
             $courselist = $panoptodata->get_course_options();
 
-            $mform->addElement('select', 'config_course', get_string('existing_course', 'block_panopto'),
-                $courselist['courses']);
-            $mform->setDefault('config_course', $courselist['selected']);
+            // Esconde o setting para não admins - sleitao 2020.06.03
+			$context = context_course::instance($COURSE->id);
+			if (has_capability('block/panopto:provision_multiple', $context)) {
+				$mform->addElement('select', 'config_course', get_string('existing_course', 'block_panopto'), $courselist['courses']);
+            	$mform->setDefault('config_course', $courselist['selected']);
+			}
 
             // Set course context to get roles.
             $context = context_course::instance($COURSE->id);
