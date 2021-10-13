@@ -165,7 +165,8 @@ try {
                             get_string('no_live_sessions', 'block_panopto') . '</div>';
                     }
 
-                    $content->text .= "<div class='sectionHeader'><b>" .
+					//sleitao - remover os completed recording
+                    /*$content->text .= "<div class='sectionHeader'><b>" .
                         get_string('completed_recordings', 'block_panopto') . '</b></div>';
 
                     if (!empty($completeddeliveries)) {
@@ -196,9 +197,10 @@ try {
                     } else {
                         $content->text .= "<div class='listItem'>" .
                             get_string('no_completed_recordings', 'block_panopto') . '</div>';
-                    }
-
-                    if ($courseinfo->AudioPodcastITunesUrl) {
+                    }*/
+					//sleitao - remover os completed recording
+					// sleitao - remover podcast feeds
+                    /*if ($courseinfo->AudioPodcastITunesUrl) {
                         $content->text .= "<div class='sectionHeader'><b>" . get_string('podcast_feeds', 'block_panopto') .
                             '</b></div>' .
                             "<div class='listItem'>" .
@@ -222,9 +224,10 @@ try {
                                 "<span class='rssParen'>)</span>" .
                                 "</div>\n";
                         }
-                    }
+                    }*/
+						//end sleitao - remover podcast feeds
                     $context = context_course::instance($courseid, MUST_EXIST);
-
+						
                     // This does not consider roles.
                     $isteacheroradmin = has_capability('moodle/course:update', $context);
 
@@ -232,25 +235,29 @@ try {
 
                     // Settings link can only be viewed by Teachers, Admins. If the proper setting is enabled, any creators can also view the link.
                     if ($hascreatoraccess && ($isteacheroradmin || get_config('block_panopto', 'any_creator_can_view_folder_settings'))) {
-                        $content->text .= "<div class='sectionHeader'><b>" . get_string('links', 'block_panopto') .
+						/*$content->text .= "<div class='sectionHeader'><b>" . get_string('links', 'block_panopto') .
                             '</b></div>' .
                             "<div class='listItem'>" .
                                 "<a href='$courseinfo->SettingsUrl' onclick='return panopto_startSSO(this)'>" .
                                     get_string('course_settings', 'block_panopto') .
                                 '</a>' .
-                            "</div>\n";
+                            "</div>\n";*/
                     }
+					// sleitao - 2016-04-26 - Link de acesso direto para o folder do curso
+					$content->text .= '<a href="'.$courseinfo->ListUrl.'" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
+									  get_string('enter','block_panopto').' Panopto</a></p></div>';
 
                     // A the users who can provision are the Moodle admin, and enrolled users given a publisher or creator role.
                     // This makes it so can_user_provision will allow only creators/publishers/admins to see these links.
                     if (get_config('block_panopto', 'anyone_view_recorder_links') || $panoptodata->can_user_provision($courseid)) {
                         $systeminfo = $panoptodata->get_recorder_download_urls();
-                        $content->text .= "<div class='listItem'>" .
+						//sleitao - ocultar download recorder e reprovision course
+                        /*$content->text .= "<div class='listItem'>" .
                             get_string('download_recorder', 'block_panopto') .
                             "<span class='nowrap'>(" .
                             "<a href='$systeminfo->WindowsRecorderDownloadUrl'>Windows</a>" .
                             " | <a href='$systeminfo->MacRecorderDownloadUrl'>Mac</a>)</span>" .
-                            "</div>\n";
+                            "</div>\n";*/
                     }
                 }
             }

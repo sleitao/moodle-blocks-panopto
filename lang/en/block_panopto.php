@@ -267,4 +267,6 @@ $string['users_have_been_synced'] = 'The below users have been synced and should
 $string['users_will_be_synced_custom'] = 'Future users will automatically be synced according to your custom Panopto settings.';
 $string['verifying_permission'] = 'Verifying permission';
 $string['watch_live'] = 'Watch live';
+
+$string['enter'] = 'Enter';
 /* End of file block_panopto.php */
