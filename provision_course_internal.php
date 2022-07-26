@@ -127,7 +127,7 @@ if ($mform->is_cancelled()) {
         $provisioneddata = $panoptodata->provision_course($provisioningdata, false);
 
         include('views/provisioned_course.html.php');
-        echo "<a href='$returnurl'>" . get_string('back_to_course', 'block_panopto') . '</a>';
+        echo "<a href='$returnurl' class=\"btn btn-success\">" . get_string('back_to_course', 'block_panopto') . '</a>'; //sleitao - link->botão
     } else {
         $mform->display();
     }
@@ -136,7 +136,7 @@ if ($mform->is_cancelled()) {
     // If there are no servers specified for provisioning, give a failure notice and allow user to return to course page.
     if (count($aserverarray) < 1) {
         echo get_string('no_server', 'block_panopto') .
-        "<br/><a href='$returnurl'>" . get_string('back_to_course', 'block_panopto') . '</a>';
+        "<br/><a href='$returnurl' class=\"btn btn-success\">" . get_string('back_to_course', 'block_panopto') . '</a>'; //sleitao - link->botão
 
     } else if (count($aserverarray) === 1) {
         // Get first element from associative array. aServerArray and appKeyArray will have same key values.
@@ -161,7 +161,7 @@ if ($mform->is_cancelled()) {
         $provisioneddata = $panoptodata->provision_course($provisioningdata, false);
 
         include('views/provisioned_course.html.php');
-        echo "<a href='$returnurl'>" . get_string('back_to_course', 'block_panopto') . '</a>';
+        echo "<a href='$returnurl' class=\"btn btn-success\">" . get_string('back_to_course', 'block_panopto') . '</a>'; //sleitao - link->botão
     } else {
         $panoptodata = new \panopto_data($courseid);
         if (in_array($panoptodata->servername, $aserverarray)) {
@@ -169,7 +169,7 @@ if ($mform->is_cancelled()) {
             $provisioneddata = $panoptodata->provision_course($provisioningdata, false);
 
             include('views/provisioned_course.html.php');
-            echo "<a href='$returnurl' class=\"btn btn-success\">" . get_string('back_to_course', 'block_panopto') . '</a>';
+            echo "<a href='$returnurl' class=\"btn btn-success\">" . get_string('back_to_course', 'block_panopto') . '</a>'; //sleitao - link->botão
         } else {
             $mform->display();
         }
