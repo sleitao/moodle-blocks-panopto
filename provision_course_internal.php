@@ -169,7 +169,7 @@ if ($mform->is_cancelled()) {
             $provisioneddata = $panoptodata->provision_course($provisioningdata, false);
 
             include('views/provisioned_course.html.php');
-            echo "<a href='$returnurl'>" . get_string('back_to_course', 'block_panopto') . '</a>';
+            echo "<a href='$returnurl' class=\"btn btn-success\">" . get_string('back_to_course', 'block_panopto') . '</a>';
         } else {
             $mform->display();
         }
