@@ -259,7 +259,7 @@ try {
                     if ($hascreatoraccess && ($isteacheroradmin || get_config('block_panopto', 'any_creator_can_view_folder_settings'))) {
                         //sleitao - mensagem a docentes migracao videos do ano anterior
                         $COURSE = get_course($courseid);
-						$content->text .= '<hr /><div class="sectionHeader"><b>2021/2022</b></div><div class="listItem">' .
+						$content->text .= '<hr /><div class="sectionHeader"><b>2022/2023</b></div><div class="listItem">' .
 						                   get_string('lastyearvideos', 'block_panopto').'<p><strong>'.
 						                   get_string('contactus', 'block_panopto').': </strong>'.
 						                   '<a href="mailto:apoio.elearning@uporto.pt?subject=Migrar%20videos:%20'.$COURSE->shortname.'">apoio.elearning@uporto.pt</a></p>';
