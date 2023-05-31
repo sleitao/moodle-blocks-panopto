@@ -21,11 +21,13 @@
  * @copyright  Panopto 2020
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+// @codingStandardsIgnoreLine
 global $CFG;
 if (empty($CFG)) {
+    // @codingStandardsIgnoreLine
     require_once(dirname(__FILE__) . '/../../config.php');
 }
-
 require_once($CFG->libdir . '/formslib.php');
 require_once(dirname(__FILE__) . '/classes/panopto_unprovision_form.php');
 require_once(dirname(__FILE__) . '/lib/panopto_data.php');
@@ -101,7 +103,7 @@ if ($mform->is_cancelled()) {
             $panoptodata = new \panopto_data($courseid);
             $unprovisioninginfo = $panoptodata->get_provisioning_info();
             $unprovisionwassuccess = $panoptodata->unprovision_course();
-            
+
             include('views/unprovisioned_course.html.php');
         }
         echo "<a href='$returnurl'>" . get_string('back_to_config', 'block_panopto') . '</a>';
@@ -111,5 +113,4 @@ if ($mform->is_cancelled()) {
 
     echo $OUTPUT->footer();
 }
-
 /* End of file unprovision_course.php */

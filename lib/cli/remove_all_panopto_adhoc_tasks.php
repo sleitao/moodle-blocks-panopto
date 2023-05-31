@@ -22,18 +22,19 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Do not require MOODLE_INTERNAL definition since this is a CLI file. 
+// Do not require MOODLE_INTERNAL definition since this is a CLI file.
 
 define('CLI_SCRIPT', true);
 
+// @codingStandardsIgnoreLine
 global $CFG;
 if (empty($CFG)) {
+    // @codingStandardsIgnoreLine
     require_once(dirname(__FILE__) . '/../../../../config.php');
 }
-
+require_once(dirname(__FILE__) . '/../panopto_data.php');
 require_once($CFG->libdir . '/clilib.php');
 require_once($CFG->libdir . '/formslib.php');
-require_once(dirname(__FILE__) . '/../panopto_data.php');
 
 $admin = get_admin();
 if (!$admin) {
@@ -41,8 +42,11 @@ if (!$admin) {
     die;
 }
 \core\session\manager::set_user(get_admin());
-cli_heading(get_string('bulk_remove_adhoc_task', 'block_panopto'));
+cli_heading(get_string('bulk_remove_all_adhoc_task', 'block_panopto'));
 
+/**
+ * Remove Panopto adhoc tasks.
+ */
 function remove_panopto_adhoc_tasks() {
     \panopto_data::remove_all_panopto_adhoc_tasks();
 

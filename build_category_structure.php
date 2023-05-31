@@ -15,17 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * the code used to build the Moodle category structure on Panopto
+ * The code used to build the Moodle category structure on Panopto
  *
  * @package block_panopto
  * @copyright  Panopto 2009 - 2017
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+// @codingStandardsIgnoreLine
 global $CFG;
 if (empty($CFG)) {
+    // @codingStandardsIgnoreLine
     require_once(dirname(__FILE__) . '/../../config.php');
 }
-
 require_once($CFG->libdir . '/formslib.php');
 require_once(dirname(__FILE__) . '/classes/panopto_build_category_structure_form.php');
 require_once(dirname(__FILE__) . '/lib/block_panopto_lib.php');
@@ -67,7 +69,10 @@ if (count($aserverarray) == 1) {
 require_login();
 
 /**
- * The category structure process workhorse funciton
+ * The category structure process workhorse function
+ *
+ * @param string $selectedserver server name
+ * @param string $selectedkey selected key
  */
 function build_category_structure($selectedserver, $selectedkey) {
     global $DB;
@@ -124,7 +129,7 @@ if ($mform->is_cancelled()) {
 
         echo "<a href='$returnurl'>" . get_string('back_to_config', 'block_panopto') . '</a>';
     } else {
-       $mform->display(); 
+        $mform->display();
     }
 
     echo $OUTPUT->footer();

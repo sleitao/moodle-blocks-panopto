@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * adds rolling sync capability to Panopto
+ * Adds rolling sync capability to Panopto
  *
  * @package block_panopto
  * @copyright Panopto 2009 - 2016 /With contributions from Spenser Jones (sjones@ambrose.edu),
@@ -27,11 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 if (empty($CFG)) {
+    // @codingStandardsIgnoreLine
     require_once(dirname(__FILE__) . '/../../../config.php');
 }
-
 require_once(dirname(__FILE__) . '/../lib/panopto_data.php');
-require_once(dirname(__FILE__) . '/../lib/panoptoblock_lti_utility.php');
+require_once(dirname(__FILE__) . '/../lib/lti/panoptoblock_lti_utility.php');
 require_once($CFG->libdir . '/pagelib.php');
 require_once($CFG->libdir . '/blocklib.php');
 
@@ -60,20 +60,20 @@ class block_panopto_rollingsync {
         global $DB;
 
         if (get_config('block_panopto', 'auto_insert_lti_link_to_new_courses')) {
-            
-            // Get a matching LTI tool for the course. 
+
+            // Get a matching LTI tool for the course.
             $tool = \panoptoblock_lti_utility::get_course_tool($event->courseid);
 
             if (!empty($tool)) {
-                // default intro should be a folderview
-                $draftid_editor = file_get_submitted_draft_itemid('introeditor');
-                file_prepare_draft_area($draftid_editor, null, null, null, null, array('subdirs'=>true));
+                // Default intro should be a folderview.
+                $draftideditor = file_get_submitted_draft_itemid('introeditor');
+                file_prepare_draft_area($draftideditor, null, null, null, null, array('subdirs' => true));
 
                 $moduleinfo = new stdClass();
                 $moduleinfo->modulename = 'lti';
                 $moduleinfo->course = $event->courseid;
                 $moduleinfo->section = 0;
-                $moduleinfo->name = 'Panopto Course Tool';
+                $moduleinfo->name = get_string('panopto_course_tool', 'block_panopto');
                 $moduleinfo->title = $tool->name;
                 $moduleinfo->typeid = $tool->id;
                 $moduleinfo->showdescriptionlaunch = false;
@@ -82,7 +82,7 @@ class block_panopto_rollingsync {
                 $moduleinfo->visible = true;
                 $moduleinfo->intro = '';
                 $moduleinfo->icon = 'https://static-contents.panopto.com/prod/panopto_logo_moodle_tool_60x60.png';
-                $moduleinfo->introeditor = array('text'=> $moduleinfo->intro, 'format'=>FORMAT_HTML, 'itemid'=>$draftid_editor);
+                $moduleinfo->introeditor = array('text' => $moduleinfo->intro, 'format' => FORMAT_HTML, 'itemid' => $draftideditor);
                 create_module($moduleinfo);
             }
         }
@@ -100,7 +100,6 @@ class block_panopto_rollingsync {
             $page->set_course($course);
             $page->blocks->add_blocks(array(BLOCK_POS_LEFT => array('panopto')), $pagetypepattern);
         }
-
 
         if (!\panopto_data::is_main_block_configured() ||
             !\panopto_data::has_minimum_version()) {
@@ -151,28 +150,93 @@ class block_panopto_rollingsync {
             $newcourseid = intval($event->courseid);
             $originalcourseid = intval($event->other['originalcourseid']);
 
+            // Make sure we cannot copy/import course into itself.
+            if ($originalcourseid == $newcourseid) {
+                return;
+            }
+
             $panoptodata = new \panopto_data($newcourseid);
             $originalpanoptodata = new \panopto_data($originalcourseid);
 
-            // We should only perform the import if both the target and the source course are provisioned in panopto
-            if (isset($panoptodata->servername) && !empty($panoptodata->servername) &&
+            $istargetcourseprovisioned =
+                isset($panoptodata->servername) && !empty($panoptodata->servername) &&
                 isset($panoptodata->applicationkey) && !empty($panoptodata->applicationkey) &&
-                isset($panoptodata->sessiongroupid) && !empty($panoptodata->sessiongroupid) &&
+                isset($panoptodata->sessiongroupid) && !empty($panoptodata->sessiongroupid);
+
+            $isoriginalcourseprovisioned =
                 isset($originalpanoptodata->servername) && !empty($originalpanoptodata->servername) &&
                 isset($originalpanoptodata->applicationkey) && !empty($originalpanoptodata->applicationkey) &&
-                isset($originalpanoptodata->sessiongroupid) && !empty($originalpanoptodata->sessiongroupid)) {
+                isset($originalpanoptodata->sessiongroupid) && !empty($originalpanoptodata->sessiongroupid);
+
+            // If any is provisioned, check if we need to provision the other course.
+            if ($istargetcourseprovisioned || $isoriginalcourseprovisioned) {
+                // Source course not provisioned, lets provision with target servername and applicationkey.
+                if (!$isoriginalcourseprovisioned) {
+                    $panoptodata = new \panopto_data($newcourseid);
+                    $originalpanoptodata->servername = $panoptodata->servername;
+                    $originalpanoptodata->applicationkey = $panoptodata->applicationkey;
+                    $originalprovisioninginfo = $originalpanoptodata->get_provisioning_info();
+                    $originalprovisioneddata = $originalpanoptodata->provision_course($originalprovisioninginfo, false);
+                    if (isset($originalprovisioneddata->Id) && !empty($originalprovisioneddata->Id)) {
+                        $isoriginalcourseprovisioned = true;
+                    }
+                }
+
+                // Target course not provisioned, lets provision with original servername and applicationkey.
+                if (!$istargetcourseprovisioned) {
+                    $originalpanoptodata = new \panopto_data($originalcourseid);
+                    $panoptodata->servername = $originalpanoptodata->servername;
+                    $panoptodata->applicationkey = $originalpanoptodata->applicationkey;
+                    $provisioninginfo = $panoptodata->get_provisioning_info();
+                    $targetprovisioneddata = $panoptodata->provision_course($provisioninginfo, false);
+                    if (isset($targetprovisioneddata->Id) && !empty($targetprovisioneddata->Id)) {
+                        $istargetcourseprovisioned = true;
+                    }
+                }
+            } else {
+                // Neither course is provisioned.
+
+                // Provision target course using automatic operation server.
+                $targetserver = panopto_get_target_panopto_server();
+                $panoptodata->servername = $targetserver->name;
+                $panoptodata->applicationkey = $targetserver->appkey;
+                $provisioninginfo = $panoptodata->get_provisioning_info();
+                $targetprovisioneddata = $panoptodata->provision_course($provisioninginfo, false);
+                if (isset($targetprovisioneddata->Id) && !empty($targetprovisioneddata->Id)) {
+                    $istargetcourseprovisioned = true;
+                }
+
+                // Provision original course using target course servername and applicationkey.
+                $panoptodata = new \panopto_data($newcourseid);
+                $originalpanoptodata->servername = $panoptodata->servername;
+                $originalpanoptodata->applicationkey = $panoptodata->applicationkey;
+                $originalprovisioninginfo = $originalpanoptodata->get_provisioning_info();
+                $originalprovisioneddata = $originalpanoptodata->provision_course($originalprovisioninginfo, false);
+                if (isset($originalprovisioneddata->Id) && !empty($originalprovisioneddata->Id)) {
+                    $isoriginalcourseprovisioned = true;
+                }
+            }
+
+            // We should only perform the import if both the target and the source courses are provisioned in panopto.
+            if ($istargetcourseprovisioned && $isoriginalcourseprovisioned) {
+
+                // If courses are provisioned to different servers, log an error and return.
+                if (strcmp($panoptodata->servername, $originalpanoptodata->servername) !== 0) {
+                    \panopto_data::print_log('ERROR: Mismatch in server name inside "courserestored" during course import/copy.');
+                    return;
+                }
 
                 $panoptodata->ensure_auth_manager();
                 $activepanoptoserverversion = $panoptodata->authmanager->get_server_version();
                 $useccv2 = version_compare(
-                    $activepanoptoserverversion, 
-                    \panopto_data::$ccv2requiredpanoptoversion, 
+                    $activepanoptoserverversion,
+                    \panopto_data::$ccv2requiredpanoptoversion,
                     '>='
                 );
 
-                if($useccv2)
+                if ($useccv2) {
                     $panoptodata->copy_panopto_content($originalcourseid);
-                else {
+                } else {
                     $panoptodata->init_and_sync_import_ccv1($originalcourseid);
                 }
             }
@@ -230,7 +294,7 @@ class block_panopto_rollingsync {
     /**
      * Called when a user has been enrolled.
      *
-     * @param \core\event\user_enrolment_created $event
+     * @param \core\event\role_assigned $event
      */
     public static function roleassigned(core\event\role_assigned $event) {
         if (!\panopto_data::is_main_block_configured() ||
@@ -256,7 +320,7 @@ class block_panopto_rollingsync {
     /**
      * Called when a user enrollment has been updated.
      *
-     * @param \core\event\user_enrolment_updated $event
+     * @param \core\event\role_unassigned $event
      */
     public static function roleunassigned(core\event\role_unassigned $event) {
         if (!\panopto_data::is_main_block_configured() ||
@@ -306,7 +370,8 @@ class block_panopto_rollingsync {
     }
 
     /**
-     * Called when a user has logged in as a different user, this will sync the sub user being logged in as, not the admin user performing the action.
+     * Called when a user has logged in as a different user.
+     * This will sync the sub user being logged in as, not the admin user performing the action.
      *
      * @param \core\event\user_loggedinas $event
      */
