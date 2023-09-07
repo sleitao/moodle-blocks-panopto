@@ -87,8 +87,9 @@ try {
 
         if ($usercanprovision) {
             $content->text .= '<br/>' .
-            "<a href='$CFG->wwwroot/blocks/panopto/provision_course_internal.php?id=$courseid'>" .
-            get_string('provision_course_link_text', 'block_panopto') . '</a>';
+            "<a href='$CFG->wwwroot/blocks/panopto/provision_course_internal.php?id=$courseid'
+            class='mt-1 btn btn-primary' role='button'><i class='fa fa-plus' aria-hidden='true'></i> "
+            . get_string('provision_course_link_text', 'block_panopto') . '</a>';
         }
 
         $content->footer = '';
@@ -258,11 +259,9 @@ try {
                     // Settings link can only be viewed by Teachers, Admins. If the proper setting is enabled, any creators can also view the link.
                     if ($hascreatoraccess && ($isteacheroradmin || get_config('block_panopto', 'any_creator_can_view_folder_settings'))) {
                         //sleitao - mensagem a docentes migracao videos do ano anterior
-                        $COURSE = get_course($courseid);
-						$content->text .= '<hr /><div class="sectionHeader"><b>2022/2023</b></div><div class="listItem">' .
-						                   get_string('lastyearvideos', 'block_panopto').'<p><strong>'.
-						                   get_string('contactus', 'block_panopto').': </strong>'.
-						                   '<a href="mailto:apoio.elearning@uporto.pt?subject=Migrar%20videos:%20'.$COURSE->shortname.'">apoio.elearning@uporto.pt</a></p>';
+						$content->text .= '<hr /><div class="sectionHeader"><b>2022/2023</b></div>' .
+                        get_string('lastyearvideos', 'block_panopto').'<p></strong><a href='. $CFG->wwwroot .'/theme/boost4uporto/pages/courserestore.php class="mt-1 btn btn-outline-info" role="button">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i> ' . get_string('tutorial', 'block_panopto') . '</a></p>';
                         /*$content->text .= "<div class='sectionHeader'><b>" . get_string('links', 'block_panopto') .
                             '</b></div>' .
                             "<div class='listItem'>" .

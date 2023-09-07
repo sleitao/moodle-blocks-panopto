@@ -285,6 +285,6 @@ $string['users_will_be_synced_custom'] = 'Future users will automatically be syn
 $string['verifying_permission'] = 'Verifying permission';
 $string['watch_live'] = 'Watch live';
 $string['lastyearvideos'] = 'Wish to use last year\'s videos?';
-$string['contactus'] = 'Contact us';
+$string['tutorial'] = 'Tutorial';
 $string['enter'] = 'Enter';
 /* End of file block_panopto.php */
