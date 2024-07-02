@@ -68,6 +68,7 @@ class block_panopto_edit_form extends block_edit_form {
 			$context = context_course::instance($COURSE->id);
 			if (has_capability('block/panopto:provision_multiple', $context)) {
 				$mform->addElement('select', 'config_course', get_string('existing_course', 'block_panopto'), $courselist['courses']);
+                $mform->addHelpButton('config_course', 'existing_course', 'block_panopto');
             	$mform->setDefault('config_course', $courselist['selected']);
 			}
 
@@ -112,6 +113,28 @@ class block_panopto_edit_form extends block_edit_form {
         } else {
             $mform->addElement('static', 'error', '', get_string('block_edit_error', 'block_panopto'));
         }
+    }
+
+    /**
+     * Custom form validation
+     *
+     * @param array $data
+     * @param array $files
+     * @return array
+     */
+    public function validation($data, $files) {
+        $errors = parent::validation($data, $files);
+
+        // Check to determine if folder is inheriting permissions.
+        $panoptodata = new \panopto_data($this->page->course->id);
+        $isfolderinheritingpermissions = $panoptodata->is_folder_inheriting_permissions($data['config_course']);
+
+        // If folder is inheriting permissions, display error.
+        if ($isfolderinheritingpermissions) {
+            $errors['config_course'] = get_string('block_edit_error_inherited_permissions', 'block_panopto');
+        }
+
+        return $errors;
     }
 }
 

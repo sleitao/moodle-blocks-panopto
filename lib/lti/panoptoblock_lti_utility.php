@@ -35,8 +35,10 @@ class panoptoblock_lti_utility {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
-        $ltitooltypes = $DB->get_records('lti_types', null, 'name');
         $targetservername = self::get_target_server_name($courseid);
+        $ltitooltypes = !empty($targetservername)
+            ? $DB->get_records('lti_types', ['tooldomain' => $targetservername], 'name')
+            : $DB->get_records('lti_types', null, 'name');
 
         $idmatches = [];
         foreach ($ltitooltypes as $type) {
@@ -84,8 +86,10 @@ class panoptoblock_lti_utility {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
-        $ltitooltypes = $DB->get_records('lti_types', null, 'name');
         $targetservername = self::get_target_server_name($courseid);
+        $ltitooltypes = !empty($targetservername)
+            ? $DB->get_records('lti_types', ['tooldomain' => $targetservername], 'name')
+            : $DB->get_records('lti_types', null, 'name');
 
         $urlmatches = [];
         foreach ($ltitooltypes as $type) {
@@ -314,10 +318,10 @@ class panoptoblock_lti_utility {
         ));
 
         $launchcontainer = lti_get_launch_container($instance, $typeconfig);
-        $returnurlparams = array('course' => $course->id,
+        $returnurlparams = ['course' => $course->id,
                                  'launch_container' => $launchcontainer,
                                  'instanceid' => $instance->typeid,
-                                 'sesskey' => sesskey());
+                                 'sesskey' => sesskey()];
 
         // Add the return URL. We send the launch container along to help us avoid frames-within-frames when the user returns.
         $url = new \moodle_url('/mod/lti/return.php', $returnurlparams);
@@ -364,7 +368,7 @@ class panoptoblock_lti_utility {
         $plugins = core_component::get_plugin_list('ltisource');
         foreach (array_keys($plugins) as $plugin) {
             $pluginparams = component_callback('ltisource_'.$plugin, 'before_launch',
-                array($instance, $endpoint, $requestparams), array());
+                [$instance, $endpoint, $requestparams], []);
 
             if (!empty($pluginparams) && is_array($pluginparams)) {
                 $requestparams = array_merge($requestparams, $pluginparams);
@@ -402,7 +406,7 @@ class panoptoblock_lti_utility {
             $params = $requestparams;
         }
 
-        return array($endpoint, $params);
+        return [$endpoint, $params];
     }
 
     /**
@@ -417,19 +421,21 @@ class panoptoblock_lti_utility {
         global $DB, $CFG;
         require_once($CFG->dirroot . '/mod/lti/locallib.php');
 
-        $ltitooltypes = $DB->get_records('lti_types', null, 'name');
-
         $targetservername = null;
 
-        $blockexists = $DB->get_record('block', array('name' => 'panopto'), 'name');
+        $blockexists = $DB->get_record('block', ['name' => 'panopto'], 'name');
         if (!empty($blockexists)) {
-            $targetservername = $DB->get_field('block_panopto_foldermap', 'panopto_server', array('moodleid' => $courseid));
+            $targetservername = $DB->get_field('block_panopto_foldermap', 'panopto_server', ['moodleid' => $courseid]);
         }
 
         // If the course if not provisioned with the Panopto block then get the default panopto server fqdn.
         if (empty($targetservername)) {
             $targetservername = get_config('block_panopto', 'automatic_operation_target_server');
         }
+
+        $ltitooltypes = !empty($targetservername)
+            ? $DB->get_records('lti_types', ['tooldomain' => $targetservername], 'name')
+            : $DB->get_records('lti_types', null, 'name');
 
         $idmatches = [];
         foreach ($ltitooltypes as $type) {
@@ -595,17 +601,20 @@ class panoptoblock_lti_utility {
             $customstr = $typeconfig['customparameters'];
         }
 
-        switch($pluginname) {
+        switch ($pluginname) {
             // We need to add the custom parameter that initiates the student submission behavior here.
             case 'mod_panoptosubmission':
                 $submissioncustomparam = "panopto_assignment_submission_content_item=true\npanopto_student_submission_tool=true";
-                if (empty($customstr)) {
-                    $customstr = $submissioncustomparam;
-                } else {
-                    $customstr .= "\n" . $submissioncustomparam;
-                }
+                $customstr = empty($customstr) ? $submissioncustomparam : $customstr . "\n" . $submissioncustomparam;
+                $customstr .= "\ngrading_not_supported=true";
+                break;
+            case 'mod_panoptocourseembed':
+            case 'atto_panoptoltibutton':
+            case 'tiny_panoptoltibutton':
+                $customstr .= "\ngrading_not_supported=true";
                 break;
             default:
+                $customstr = '';
                 break;
         }
 
@@ -734,9 +743,9 @@ class panoptoblock_lti_utility {
 
         $targetservername = null;
 
-        $blockexists = $DB->get_record('block', array('name' => 'panopto'), 'name');
+        $blockexists = $DB->get_record('block', ['name' => 'panopto'], 'name');
         if (!empty($blockexists)) {
-            $targetservername = $DB->get_field('block_panopto_foldermap', 'panopto_server', array('moodleid' => $courseid));
+            $targetservername = $DB->get_field('block_panopto_foldermap', 'panopto_server', ['moodleid' => $courseid]);
         }
 
         // If the course if not provisioned with the Panopto block then get the default panopto server fqdn.

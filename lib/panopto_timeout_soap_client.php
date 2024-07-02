@@ -121,14 +121,14 @@ class PanoptoTimeoutSoapClient extends SoapClient {
      * @param int $version the SOAP version
      * @param bool $one_way determine if response is expected or not
      */
-    public function __doRequest($request, $location, $action, $version, $one_way = false) {
+    public function __doRequest($request, $location, $action, $version, $one_way = false): ?string {
         if (empty($this->socket_timeout) && empty($this->connect_timeout)) {
             // Call via parent because we require no timeout.
             $response = parent::__doRequest($request, $location, $action, $version, $one_way);
 
             $lastresponseheaders = $this->__getLastResponseHeaders();
             preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $lastresponseheaders, $matches);
-            $this->panoptocookies = array();
+            $this->panoptocookies = [];
             foreach ($matches[1] as $item) {
                 parse_str($item, $cookie);
                 $this->panoptocookies = array_merge($this->panoptocookies, $cookie);
@@ -140,8 +140,8 @@ class PanoptoTimeoutSoapClient extends SoapClient {
                 'CURLOPT_VERBOSE' => false,
                 'CURLOPT_RETURNTRANSFER' => true,
                 'CURLOPT_HEADER' => true,
-                'CURLOPT_HTTPHEADER' => array('Content-Type: text/xml',
-                                              'SoapAction: ' . $action)
+                'CURLOPT_HTTPHEADER' => ['Content-Type: text/xml',
+                                              'SoapAction: ' . $action]
             ];
 
             if (!is_null($this->socket_timeout)) {
@@ -160,12 +160,17 @@ class PanoptoTimeoutSoapClient extends SoapClient {
                 $options['CURLOPT_PROXYPORT'] = $this->proxy_port;
             }
 
+            // Depending on Moodle settings Moodle will not include  connect headers in the header size. This will break all curl calls from here.
+            if (defined('CURLOPT_SUPPRESS_CONNECT_HEADERS')) {
+                $options['CURLOPT_SUPPRESS_CONNECT_HEADERS'] = 0;
+            }
+
             $response = $curl->post($location, $request, $options);
 
             // Get cookies.
             $actualresponseheaders = (isset($curl->info["header_size"])) ? substr($response, 0, $curl->info["header_size"]) : "";
             preg_match_all('/^Set-Cookie:\s*([^;]*)/mi', $actualresponseheaders, $matches);
-            $this->panoptocookies = array();
+            $this->panoptocookies = [];
             foreach ($matches[1] as $item) {
                 parse_str($item, $cookie);
                 $this->panoptocookies = array_merge($this->panoptocookies, $cookie);

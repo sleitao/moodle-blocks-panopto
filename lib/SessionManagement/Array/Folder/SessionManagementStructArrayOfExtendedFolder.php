@@ -21,7 +21,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  /**
- * File for class SessionManagementStructArrayOfSessionAvailabilitySettings
+ * File for class SessionManagementStructArrayOfExtendedFolder
  * @package SessionManagement
  * @subpackage Structs
  * @author Panopto
@@ -29,7 +29,7 @@
  * @date 2017-01-19
  */
 /**
- * This class stands for SessionManagementStructArrayOfSessionAvailabilitySettings originally named ArrayOfSessionAvailabilitySettings
+ * This class stands for SessionManagementStructArrayOfExtendedFolder originally named ArrayOfFolder
  * Meta informations extracted from the WSDL
  * - from schema : {@link http://demo.hosted.panopto.com/Panopto/PublicAPI/4.6/SessionManagement.svc?xsd=xsd3}
  * @package SessionManagement
@@ -38,43 +38,43 @@
  * @version 20150429-01
  * @date 2017-01-19
  */
-class SessionManagementStructArrayOfSessionAvailabilitySettings extends SessionManagementWsdlClass
+class SessionManagementStructArrayOfExtendedFolder extends SessionManagementWsdlClass
 {
     /**
-     * The SessionAvailabilitySettings
+     * The ExtendedFolder
      * Meta informations extracted from the WSDL
      * - maxOccurs : unbounded
      * - minOccurs : 0
      * - nillable : true
-     * @var SessionManagementStructSessionAvailabilitySettings
+     * @var SessionManagementStructExtendedFolder
      */
-    public $SessionAvailabilitySettings;
+    public $ExtendedFolder;
     /**
-     * Constructor method for ArrayOfSessionAvailabilitySettings
+     * Constructor method for ArrayOfExtendedFolder
      * @see parent::__construct()
-     * @param SessionManagementStructSessionAvailabilitySettings $_sessionAvailabilitySettings
-     * @return SessionManagementStructArrayOfSessionAvailabilitySettings
+     * @param SessionManagementStructExtendedFolder $_extendedFolder
+     * @return SessionManagementStructArrayOfExtendedFolder
      */
-    public function __construct($_sessionAvailabilitySettings = NULL)
+    public function __construct($_extendedFolder = NULL)
     {
-        parent::__construct(array('SessionAvailabilitySettings'=>$_sessionAvailabilitySettings),false);
+        parent::__construct(array('ExtendedFolder'=>$_extendedFolder),false);
     }
     /**
-     * Get SessionAvailabilitySettings value
-     * @return SessionManagementStructSessionAvailabilitySettings|null
+     * Get ExtendedFolder value
+     * @return SessionManagementStructExtendedFolder|null
      */
-    public function getSessionAvailabilitySettings()
+    public function getExtendedFolder()
     {
-        return $this->SessionAvailabilitySettings;
+        return $this->Folder;
     }
     /**
-     * Set SessionAvailabilitySettings value
-     * @param SessionManagementStructSessionAvailabilitySettings $_sessionAvailabilitySettings the SessionAvailabilitySettings
-     * @return SessionManagementStructSessionAvailabilitySettings
+     * Set ExtendedFolder value
+     * @param SessionManagementStructExtendedFolder $_extendedFolder the ExtendedFolder
+     * @return SessionManagementStructExtendedFolder
      */
-    public function setSessionAvailabilitySettings($_sessionAvailabilitySettings)
+    public function setExtendedFolder($_extendedFolder)
     {
-        return ($this->SessionAvailabilitySettings = $_sessionAvailabilitySettings);
+        return ($this->ExtendedFolder = $_extendedFolder);
     }
     /**
      * Returns the current element
@@ -90,7 +90,7 @@ class SessionManagementStructArrayOfSessionAvailabilitySettings extends SessionM
      * Returns the indexed element
      * @see SessionManagementWsdlClass::item()
      * @param int $_index
-     * @return SessionManagementStructSessionAvailabilitySettings
+     * @return SessionManagementStructExtendedFolder
      */
     public function item($_index)
     {
@@ -99,7 +99,7 @@ class SessionManagementStructArrayOfSessionAvailabilitySettings extends SessionM
     /**
      * Returns the first element
      * @see SessionManagementWsdlClass::first()
-     * @return SessionManagementStructSessionAvailabilitySettings
+     * @return SessionManagementStructExtendedFolder
      */
     public function first()
     {
@@ -108,7 +108,7 @@ class SessionManagementStructArrayOfSessionAvailabilitySettings extends SessionM
     /**
      * Returns the last element
      * @see SessionManagementWsdlClass::last()
-     * @return SessionManagementStructSessionAvailabilitySettings
+     * @return SessionManagementStructExtendedFolder
      */
     public function last()
     {
@@ -128,11 +128,11 @@ class SessionManagementStructArrayOfSessionAvailabilitySettings extends SessionM
     /**
      * Returns the attribute name
      * @see SessionManagementWsdlClass::getAttributeName()
-     * @return string SessionAvailabilitySettings
+     * @return string ExtendedFolder
      */
     public function getAttributeName()
     {
-        return 'SessionAvailabilitySettings';
+        return 'ExtendedFolder';
     }
     /**
      * Method called when an object has been exported with var_export() functions
@@ -140,7 +140,7 @@ class SessionManagementStructArrayOfSessionAvailabilitySettings extends SessionM
      * @see SessionManagementWsdlClass::__set_state()
      * @uses SessionManagementWsdlClass::__set_state()
      * @param array $_array the exported values
-     * @return SessionManagementStructArrayOfSessionAvailabilitySettings
+     * @return SessionManagementStructArrayOfExtendedFolder
      */
     public static function __set_state(array $_array)
     {
