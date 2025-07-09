@@ -261,7 +261,7 @@ try {
                     // Settings link can only be viewed by Teachers, Admins. If the proper setting is enabled, any creators can also view the link.
                     if ($hascreatoraccess && ($isteacheroradmin || get_config('block_panopto', 'any_creator_can_view_folder_settings'))) {
                         //sleitao - mensagem a docentes migracao videos do ano anterior
-						$content->text .= '<hr /><div class="sectionHeader"><b>2023/2024</b></div>' .
+						$content->text .= '<hr /><div class="sectionHeader"><b>2024/2025</b></div>' .
                         get_string('lastyearvideos', 'block_panopto').'<p></strong><a href='. $CFG->wwwroot .'/theme/boost4uporto/pages/courserestore.php class="mt-1 btn btn-outline-info" role="button">
                         <i class="fa fa-info-circle" aria-hidden="true"></i> ' . get_string('tutorial', 'block_panopto') . '</a></p>';
                         /*$content->text .= "<div class='sectionHeader'><b>" . get_string('links', 'block_panopto') .
