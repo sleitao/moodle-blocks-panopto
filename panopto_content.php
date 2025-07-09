@@ -263,7 +263,7 @@ try {
                         //sleitao - mensagem a docentes migracao videos do ano anterior
 						$content->text .= '<hr /><div class="sectionHeader"><b>2024/2025</b></div>' .
                         get_string('lastyearvideos', 'block_panopto').'<p></strong><a href='. $CFG->wwwroot .'/theme/boost4uporto/pages/courserestore.php class="mt-1 btn btn-outline-info" role="button">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i> ' . get_string('tutorial', 'block_panopto') . '</a></p><hr />';
+                        <i class="fa fa-info-circle" aria-hidden="true"></i> ' . get_string('tutorial', 'block_panopto') . '</a></p>';
                         /*$content->text .= "<div class='sectionHeader'><b>" . get_string('links', 'block_panopto') .
                             '</b></div>' .
                             "<div class='listItem'>" .
@@ -273,7 +273,7 @@ try {
                             "</div>\n";*/
                     }
 					// sleitao - 2016-04-26 - Link de acesso direto para o folder do curso
-					$content->text .= '<a href="'.$courseinfo->ListUrl.'" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
+					$content->text .= '<hr /><a href="'.$courseinfo->ListUrl.'" class="btn btn-success" onclick="return panopto_startSSO(this)">'.
 						get_string('enter','block_panopto').' Panopto</a></div>';
                     // A the users who can provision are the Moodle admin, and enrolled users given a publisher or creator role.
                     // This makes it so can_user_provision will allow only creators/publishers/admins to see these links.
